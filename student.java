@@ -232,4 +232,5 @@ public class Main {
         System.out.println("Michael's Schedule: " + university.getStudentSchedule(25));
         System.out.println("Creed's Schedule: " + university.getStudentSchedule(27));
         System.out.println("CSC501 Roster: " + university.getCourseRoster("CSC501"));
-        System.out.println("CSC311 Roster: " + university.getCourseRoster("C
+        System.out.println("CSC311 Roster: " + university.getCourseRoster("CSC311"));
+        System.out.println("CSC582 Roster: " + university.getCourseRoster("CSC582"));

@@ -234,5 +234,6 @@ public class Main {
         System.out.println("CSC501 Roster: " + university.getCourseRoster("CSC501"));
         System.out.println("CSC311 Roster: " + university.getCourseRoster("CSC311"));
         System.out.println("CSC582 Roster: " + university.getCourseRoster("CSC582"));
+
     }
 }

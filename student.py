@@ -1,4 +1,4 @@
-
+# References: Generative AI, StackOverflow, Reddit
 # Student Enrollment 
 class Student:
     def __init__(self, student_id, name):
@@ -166,15 +166,24 @@ if __name__ == "__main__":
     #Adding students and courses
     university.add_student(25, "Michael Scott")
     university.add_student(26, "Dwight Schrute")
+    university.add_student(27, "Creed")
     university.add_course("CSC501", "Design and Analysis of Algorithms")
     university.add_course("CSC311", "Data Structures")
+    university.add_course("CSC582", "OOAD")
 
     #Enrolling students in the courses
     university.enroll_student_in_course(25, "CSC501")
     university.enroll_student_in_course(26, "CSC311")
     university.enroll_student_in_course(26, "CSC501")
+    university.enroll_student_in_course(27, "CSC311")
+    university.enroll_student_in_course(27, "CSC582")
 
+    #Retrieving Student schedule and Course roster
     print("Dwight's Schedule:", university.get_student_schedule(26))
     print("Micahel's Schedule:", university.get_student_schedule(25))
+    print("Creed's Schedule:", university.get_student_schedule(27))
     print("CSC501 Roster:", university.get_course_roster("CSC501"))
     print("CSC311 Roster:", university.get_course_roster("CSC311"))
+    print("CSC582 Roster:", university.get_course_roster("CSC582"))
+
+

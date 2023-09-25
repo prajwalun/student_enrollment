@@ -1,6 +1,5 @@
 import java.util.*;
 
-// Student Enrollment
 class Student {
     private int studentId;
     private String name;
@@ -12,6 +11,14 @@ class Student {
         this.enrolledCourses = new HashSet<>();
     }
 
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public Set<String> getEnrolledCourses() {
+        return enrolledCourses;
+    }
+
     public void enrollInCourse(String courseCode) {
         enrolledCourses.add(courseCode);
     }
@@ -21,7 +28,6 @@ class Student {
     }
 }
 
-// Course Enrollment
 class Course {
     private String courseCode;
     private String courseName;
@@ -33,6 +39,14 @@ class Course {
         this.enrolledStudents = new HashSet<>();
     }
 
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public Set<Integer> getEnrolledStudents() {
+        return enrolledStudents;
+    }
+
     public void enrollStudent(int studentId) {
         enrolledStudents.add(studentId);
     }
@@ -42,15 +56,13 @@ class Course {
     }
 }
 
-// AVL Implementation
 class AVLNode {
-    int key;
-    String value;
-    AVLNode left;
-    AVLNode right;
+    String key;
+    Course value;
     int height;
+    AVLNode left, right;
 
-    public AVLNode(int key, String value) {
+    public AVLNode(String key, Course value) {
         this.key = key;
         this.value = value;
         this.height = 1;
@@ -94,40 +106,38 @@ class AVLTree {
         return y;
     }
 
-    public void insert(int key, String value) {
-        root = _insert(root, key, value);
+    public void insert(String key, Course value) {
+        root = insertRec(root, key, value);
     }
 
-    private AVLNode _insert(AVLNode node, int key, String value) {
-        if (node == null) {
-            return new AVLNode(key, value);
-        }
+    private AVLNode insertRec(AVLNode node, String key, Course value) {
+        if (node == null) return new AVLNode(key, value);
 
-        if (key < node.key) {
-            node.left = _insert(node.left, key, value);
-        } else if (key > node.key) {
-            node.right = _insert(node.right, key, value);
-        } else {
-            return node; 
-        }
+        if (key.compareTo(node.key) < 0)
+            node.left = insertRec(node.left, key, value);
+        else if (key.compareTo(node.key) > 0)
+            node.right = insertRec(node.right, key, value);
+        else return node; // Duplicate keys are not allowed
 
         node.height = Math.max(height(node.left), height(node.right)) + 1;
 
         int balance = balanceFactor(node);
 
+        // Left Heavy
         if (balance > 1) {
-            if (key < node.left.key) {
+            if (key.compareTo(node.left.key) < 0)
                 return rotateRight(node);
-            } else {
+            else {
                 node.left = rotateLeft(node.left);
                 return rotateRight(node);
             }
         }
 
+        // Right Heavy
         if (balance < -1) {
-            if (key > node.right.key) {
+            if (key.compareTo(node.right.key) > 0)
                 return rotateLeft(node);
-            } else {
+            else {
                 node.right = rotateRight(node.right);
                 return rotateLeft(node);
             }
@@ -136,26 +146,21 @@ class AVLTree {
         return node;
     }
 
-    public String search(int key) {
-        return _search(root, key);
+    public Course search(String key) {
+        return searchRec(root, key);
     }
 
-    private String _search(AVLNode node, int key) {
-        if (node == null) {
-            return null;
-        }
+    private Course searchRec(AVLNode node, String key) {
+        if (node == null) return null;
 
-        if (key == node.key) {
-            return node.value;
-        } else if (key < node.key) {
-            return _search(node.left, key);
-        } else {
-            return _search(node.right, key);
-        }
+        int cmp = key.compareTo(node.key);
+
+        if (cmp < 0) return searchRec(node.left, key);
+        else if (cmp > 0) return searchRec(node.right, key);
+        else return node.value;
     }
 }
 
-// University Info
 class University {
     private Map<Integer, Student> students;
     private AVLTree courses;
@@ -173,42 +178,48 @@ class University {
 
     public void addCourse(String courseCode, String courseName) {
         if (courses.search(courseCode) == null) {
-            courses.insert(courseCode.hashCode(), courseName);
+            courses.insert(courseCode, new Course(courseCode, courseName));
         }
     }
 
     public void enrollStudentInCourse(int studentId, String courseCode) {
         Student student = students.get(studentId);
-        String courseInfo = courses.search(courseCode.hashCode());
+        Course course = courses.search(courseCode);
 
-        if (student != null && courseInfo != null) {
+        if (student != null && course != null) {
             student.enrollInCourse(courseCode);
-            courses.insert(courseCode.hashCode(), courseInfo);
+            course.enrollStudent(studentId);
         }
     }
 
     public void dropStudentFromCourse(int studentId, String courseCode) {
         Student student = students.get(studentId);
-        String courseInfo = courses.search(courseCode.hashCode());
+        Course course = courses.search(courseCode);
 
-        if (student != null && courseInfo != null) {
+        if (student != null && course != null) {
             student.dropCourse(courseCode);
-            courses.insert(courseCode.hashCode(), courseInfo);
+            course.dropStudent(studentId);
         }
     }
 
     public List<String> getStudentSchedule(int studentId) {
         Student student = students.get(studentId);
-        return (student != null) ? new ArrayList<>(student.getEnrolledCourses()) : new ArrayList<>();
+        if (student != null) {
+            return new ArrayList<>(student.getEnrolledCourses());
+        }
+        return Collections.emptyList();
     }
 
     public List<Integer> getCourseRoster(String courseCode) {
-        String courseInfo = courses.search(courseCode.hashCode());
-        return (courseInfo != null) ? new ArrayList<>(courses.getEnrolledStudents()) : new ArrayList<>();
+        Course course = courses.search(courseCode);
+        if (course != null) {
+            return new ArrayList<>(course.getEnrolledStudents());
+        }
+        return Collections.emptyList();
     }
 }
 
-public class Main {
+public class University_system {
     public static void main(String[] args) {
         University university = new University();
 

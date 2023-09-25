@@ -235,5 +235,10 @@ public class Main {
         System.out.println("CSC311 Roster: " + university.getCourseRoster("CSC311"));
         System.out.println("CSC582 Roster: " + university.getCourseRoster("CSC582"));
 
+        // Dropping a course
+        university.dropStudentFromCourse(26, "CSC311");
+        System.out.println("Dwight's Schedule: " + university.getStudentSchedule(26));
+
+
     }
 }
